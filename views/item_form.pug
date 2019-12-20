@@ -1,0 +1,54 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='' enctype='multipart/form-data')
+    div.form-group
+      label(for='name') Name:
+      input#name.form-control(type='text', placeholder='Name of item' name='name' required='true' value=(undefined===item ? '' : item.name) )
+    div.form-group
+      label(for='category') Category:
+      select#category.form-control(type='select', placeholder='Select category' name='category' required='true' )
+        - categories.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+        for category in categories
+          if item
+            option(value=category._id selected=(category._id.toString()==item.category._id || category._id.toString()==item.category ? 'selected' : false) ) #{category.name}
+          else
+            option(value=category._id) #{category.name}
+    div.form-group
+      label(for='description') Description:
+      textarea#description.form-control(type='textarea', placeholder='Description' name='description' rows='3') #{undefined===item ? '' : item.description}
+    div.form-group
+      label(for='price') Price in Euro/kg:
+      input#price.form-control(type='number', min="0.01", step="0.01", placeholder='0.01' name='price' value=(undefined===item ? '' : item.price) required='true') 
+      div.form-group
+        label(for='numberInStock') Number in stock:
+        input#numberInStock.form-control(type='number', min='0', step="1", placeholder='0' name='numberInStock' value=(undefined===item ? '' : item.numberInStock) required='true') 
+      if item
+        if item.image
+          img(src='/images/' + item.image style='width:200px')
+          hr
+          div.form-group
+            label(for='deleteImage') Delete this image
+            input#deleteImage(type='checkbox' name='deleteImage')   
+            input#previousImage.form-control(type='hidden',name='previousImage', required='true', value=item.image )
+          p #[strong Or] 
+          div.form-group
+            label(for='image') Replace this image by:
+            input#image.form-control(type='file' name='image') 
+            input#previousImage.form-control(type='hidden',name='previousImage', required='true', value=item.image )
+        else 
+          div.form-group
+            label(for='image') Image:
+            input#image.form-control(type='file' name='image') 
+      else 
+        div.form-group
+          label(for='image') Image:
+          input#image.form-control(type='file' name='image') 
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors 
+    ul
+      for error in errors
+        li!= error.msg
