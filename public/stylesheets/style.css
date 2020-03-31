@@ -191,6 +191,11 @@ textarea {
   margin-top: 1em;
 }
 
+.image-container img {
+  width: 400px;
+  max-width: 90%;
+}
+
 .items {
   margin-top: 1em;
 }

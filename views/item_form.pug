@@ -28,7 +28,7 @@ block content
           input#numberInStock.form-control(type='number', min='0', step="1", placeholder='0' name='numberInStock' value=(undefined===item ? '' : item.numberInStock) required='true') 
         if item
           if item.image
-            img(src='/images/' + item.image style='width:200px')
+            img(src='/images/' + item.image style='width:150px')
             hr
             div.form-group
               label(for='deleteImage') Delete this image

@@ -6,7 +6,7 @@ block content
       h1 #{item.name}
       if item.image
         div(class='image-container')
-          img(src='/images/' + item.image style='width:400px') 
+          img(src='/images/' + item.image) 
       div(class='items')    
         p #[strong Category:] 
           a(href=item.category.url) #{item.category.name}
