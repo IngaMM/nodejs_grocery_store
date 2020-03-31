@@ -1,27 +1,32 @@
 extends layout
 
 block content
-  h1 #{title}: #{category.name}
-  
-  if category_items.length
-  
-    p #[strong Delete the following items before attempting to delete this category.]
-  
-    div(style='margin-left:20px;margin-top:20px')
-
-      h4 Items
+  div(class='list-page')
+    h1 #{category.name}
     
-      dl
-      each item in category_items
-        dt 
-          a(href=item.url) #{item.name}
-        dd #{item.description}
-
-  else
-    p Do you really want to delete this Category?
+    if category_items.length
     
-    form(method='POST' action='')
-      div.form-group
-        input#categoryid.form-control(type='hidden',name='categoryid', required='true', value=category._id )
+      p(class='del-p') Delete the following items before attempting to delete this category:
+    
+      div(class='items-in-category')
+        h3 Items
+        
+        dl
+          each item in category_items
+            dt 
+              a(href=item.url) #{item.name}
 
-      button.btn.btn-primary(type='submit') Delete
+    else
+      p(class='del-p') Do you really want to delete this category?
+      
+      form(method='POST' action='')
+        div.form-group
+          input#categoryid.form-control(type='hidden',name='categoryid', required='true', value=category._id )
+
+        button.btn.btn-primary(type='submit') Delete
+        
+      - url = '/inventory/category/' + category._id
+      form(method='GET' action=url)
+        div.form-group
+        
+        button.btn.btn-primary(type='submit') Abort

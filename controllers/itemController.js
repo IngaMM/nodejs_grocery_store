@@ -1,11 +1,11 @@
-var Item = require("../models/item");
-var Category = require("../models/category");
-var async = require("async");
-var fs = require("fs");
+const Item = require("../models/item");
+const Category = require("../models/category");
+const async = require("async");
+const fs = require("fs");
 const { body, validationResult } = require("express-validator/check");
 const { sanitizeBody } = require("express-validator/filter");
 
-// Display list of all Items.
+// Display list of all items.
 exports.item_list = function(req, res, next) {
   Item.find({}, "name category")
     .populate("category")
@@ -14,11 +14,11 @@ exports.item_list = function(req, res, next) {
         return next(err);
       }
       //Successful, so render
-      res.render("item_list", { title: "Item List", item_list: list_items });
+      res.render("item_list", { title: "Items", item_list: list_items });
     });
 };
 
-// Display detail page for a specific Item.
+// Display detail page for a specific item.
 exports.item_detail = function(req, res, next) {
   Item.findById(req.params.id)
     .populate("category")
@@ -40,7 +40,7 @@ exports.item_detail = function(req, res, next) {
     });
 };
 
-// Display Item create form on GET.
+// Display item create form on GET.
 exports.item_create_get = function(req, res, next) {
   // Get all categories, which we can use for adding to our item.
   Category.find(function(err, categories) {
@@ -54,7 +54,7 @@ exports.item_create_get = function(req, res, next) {
   });
 };
 
-// Handle Item create on POST.
+// Handle item create on POST.
 exports.item_create_post = [
   // Validate fields.
   body("name", "Name must not be empty.")
@@ -78,7 +78,7 @@ exports.item_create_post = [
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
-    // Create a Item object with escaped and trimmed data.
+    // Create a item object with escaped and trimmed data.
     var item = new Item({
       name: req.body.name,
       description: req.body.description,
@@ -115,14 +115,14 @@ exports.item_create_post = [
         if (err) {
           return next(err);
         }
-        //successful - redirect to new item record.
+        // Successful - redirect to new item record.
         res.redirect(item.url);
       });
     }
   }
 ];
 
-// Display Item delete form on GET.
+// Display item delete form on GET.
 exports.item_delete_get = function(req, res, next) {
   Item.findById(req.params.id).exec(function(err, item) {
     if (err) {
@@ -140,7 +140,7 @@ exports.item_delete_get = function(req, res, next) {
   });
 };
 
-// Handle Item delete on POST.
+// Handle item delete on POST.
 exports.item_delete_post = function(req, res, next) {
   Item.findById(req.body.itemid).exec(function(err, results) {
     if (err) {
@@ -171,7 +171,7 @@ exports.item_delete_post = function(req, res, next) {
   });
 };
 
-// Display Item update form on GET.
+// Display item update form on GET.
 exports.item_update_get = function(req, res, next) {
   // Get item and categories for form.
   async.parallel(
@@ -205,7 +205,7 @@ exports.item_update_get = function(req, res, next) {
   );
 };
 
-// Handle Item update on POST.
+// Handle item update on POST.
 exports.item_update_post = [
   // Validate fields.
   body("name", "Name must not be empty.")
@@ -229,7 +229,7 @@ exports.item_update_post = [
     // Extract the validation errors from a request.
     const errors = validationResult(req);
 
-    // Create a Item object with escaped/trimmed data and old id.
+    // Create a item object with escaped/trimmed data and old id.
     var item = new Item({
       name: req.body.name,
       description: req.body.description,

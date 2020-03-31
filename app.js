@@ -1,30 +1,27 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var compression = require("compression");
-var helmet = require("helmet");
-
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var inventoryRouter = require("./routes/inventory"); //Import routes for "inventory" area of site
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const compression = require("compression");
+const helmet = require("helmet");
+const indexRouter = require("./routes/index");
+const inventoryRouter = require("./routes/inventory");
 const basicAuth = require("express-basic-auth");
 require("dotenv").config();
 
-var app = express();
+const app = express();
 
 app.use(helmet());
-app.use(compression()); //Compress all routes
+app.use(compression());
 
 //Set up mongoose connection
-var mongoose = require("mongoose");
-// Set up mongoose connection
-var dev_db_url = process.env.DB_URL;
-var mongoDB = process.env.MONGODB_URI || dev_db_url;
-
+const mongoose = require("mongoose");
+const dev_db_url = process.env.DB_URL;
+const mongoDB = process.env.MONGODB_URI || dev_db_url;
+mongoose.set("useFindAndModify", false);
 mongoose.connect(mongoDB, { useNewUrlParser: true });
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // view engine setup
@@ -53,7 +50,6 @@ app.post(
 );
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
 app.use("/inventory", inventoryRouter); // Add inventory routes to middleware chain.
 
 // catch 404 and forward to error handler

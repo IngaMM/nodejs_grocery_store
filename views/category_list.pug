@@ -1,12 +1,12 @@
 extends layout
 
 block content
-  h1= title
-  
-  ul
-    - category_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
-    each category in category_list
-      li 
-        a(href=category.url) #{category.name} 
-    else
-      li There are no categories.
+  div(class='list-page')
+    h1= title
+    div(class='category-list')
+      - category_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+      each category in category_list
+        p 
+          a(href=category.url) #{category.name} 
+      else
+        p There are no categories.

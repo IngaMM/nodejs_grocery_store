@@ -1,14 +1,21 @@
 extends layout
 
 block content
-  h1 #{title}: #{item.name}
-  
-  p Do you really want to delete this Item?
+  div(class='list-page')
+    h1 #{item.name}
     
-  form(method='POST' action='')
-    div.form-group
-      input#itemid.form-control(type='hidden',name='itemid', required='true', value=item._id )
-      input#imageName.form-control(type='hidden',name='imageName', required='true', value=item.image )
+    p(class='del-p')  Do you really want to delete this Item?
       
+    form(method='POST' action='')
+      div.form-group
+        input#itemid.form-control(type='hidden',name='itemid', required='true', value=item._id )
+        input#imageName.form-control(type='hidden',name='imageName', required='true', value=item.image )
+        
 
-    button.btn.btn-primary(type='submit') Delete
+      button.btn.btn-primary(type='submit') Delete
+      
+    - url = '/inventory/item/' + item._id
+    form(method='GET' action=url)
+      div.form-group
+        
+      button.btn.btn-primary(type='submit') Abort

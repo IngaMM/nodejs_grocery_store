@@ -1,14 +1,15 @@
 extends layout
 
 block content
-  h1= title
-  
-  ul
-    - item_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
-    each item in item_list
-      li 
-        a(href=item.url) #{item.name} 
-        |  (#{item.category.name})
+  div(class='list-page')
+    h1= title
+    div(class='item-list')
+      - item_list.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+        each item in item_list
+          p
+            a(href=item.url) #{item.name} 
+            |  (#{item.category.name})
 
-    else
-      li There are no items.
+        else
+          p There are no items.
+  

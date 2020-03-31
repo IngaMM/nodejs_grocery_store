@@ -1,15 +1,16 @@
-var Category = require("../models/category");
-var Item = require("../models/item");
+const Category = require("../models/category");
+const Item = require("../models/item");
 
-var async = require("async");
+const async = require("async");
 const { body, validationResult } = require("express-validator/check");
 const { sanitizeBody } = require("express-validator/filter");
 
+// Display home (index) page
 exports.index = function(req, res) {
   async.parallel(
     {
       category_count: function(callback) {
-        Category.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
+        Category.countDocuments({}, callback);
       },
       item_count: function(callback) {
         Item.countDocuments({}, callback);
@@ -18,6 +19,7 @@ exports.index = function(req, res) {
     function(err, results) {
       res.render("index", {
         title: "Inventory Home",
+        header: "Store Inventory",
         error: err,
         data: results
       });
@@ -25,7 +27,7 @@ exports.index = function(req, res) {
   );
 };
 
-// Display list of all Categories.
+// Display list of all categories.
 exports.category_list = function(req, res, next) {
   Category.find({}, "name").exec(function(err, list_categories) {
     if (err) {
@@ -33,13 +35,13 @@ exports.category_list = function(req, res, next) {
     }
     //Successful, so render
     res.render("category_list", {
-      title: "Category List",
+      title: "Categories",
       category_list: list_categories
     });
   });
 };
 
-// Display detail page for a specific Category.
+// Display detail page for a specific category.
 exports.category_detail = function(req, res, next) {
   async.parallel(
     {
@@ -73,25 +75,25 @@ exports.category_detail = function(req, res, next) {
   );
 };
 
-// Display Category create form on GET.
+// Display category create form on GET.
 exports.category_create_get = function(req, res, next) {
   res.render("category_form", { title: "Create Category" });
 };
 
-// Handle Category create on POST.
+// Handle category create on POST.
 exports.category_create_post = [
   // Validate that the name field is not empty.
   body("name", "Category name required")
     .trim()
     .isLength({ min: 1 }),
 
-  // Sanitize (escape) the name field.
+  // Sanitize (escape) the input
   sanitizeBody("name").escape(),
   sanitizeBody("description").escape(),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
-    // Extract the validation errors from a request.
+    // Extract the validation errors.
     const errors = validationResult(req);
 
     // Create a category object with escaped and trimmed data.
@@ -110,7 +112,7 @@ exports.category_create_post = [
       return;
     } else {
       // Data from form is valid.
-      // Check if Category with same name already exists.
+      // Check if category with same name already exists.
       Category.findOne({ name: req.body.name }).exec(function(
         err,
         found_category
@@ -136,7 +138,7 @@ exports.category_create_post = [
   }
 ];
 
-// Display Category delete form on GET.
+// Display category delete form on GET.
 exports.category_delete_get = function(req, res, next) {
   async.parallel(
     {
@@ -165,7 +167,7 @@ exports.category_delete_get = function(req, res, next) {
   );
 };
 
-// Handle Category delete on POST.
+// Handle category delete on POST.
 exports.category_delete_post = function(req, res, next) {
   async.parallel(
     {
@@ -205,7 +207,7 @@ exports.category_delete_post = function(req, res, next) {
   );
 };
 
-// Display Category update form on GET.
+// Display category update form on GET.
 exports.category_update_get = function(req, res, next) {
   Category.findById(req.params.id).exec(function(err, category) {
     if (err) {
@@ -225,7 +227,7 @@ exports.category_update_get = function(req, res, next) {
   });
 };
 
-// Handle Category update on POST.
+// Handle category update on POST.
 exports.category_update_post = [
   // Validate fields.
   body("name", "Category name required")
@@ -233,8 +235,7 @@ exports.category_update_post = [
     .isLength({ min: 1 }),
 
   // Sanitize fields.
-  sanitizeBody("name").escape(),
-  sanitizeBody("description").escape(),
+  sanitizeBody("*").escape(),
 
   // Process request after validation and sanitization.
   (req, res, next) => {
@@ -245,7 +246,7 @@ exports.category_update_post = [
     var category = new Category({
       name: req.body.name,
       description: req.body.description,
-      _id: req.params.id //This is required, or a new ID will be assigned!
+      _id: req.params.id
     });
 
     if (!errors.isEmpty()) {
@@ -257,31 +258,16 @@ exports.category_update_post = [
       });
     } else {
       // Data from form is valid.
-      // Check if Category with same name already exists.
-      Category.findOne({ name: req.body.name }).exec(function(
+      // Update the record.
+      Category.findByIdAndUpdate(req.params.id, category, {}, function(
         err,
-        found_category
+        thecategory
       ) {
         if (err) {
           return next(err);
         }
-
-        if (found_category) {
-          // Category exists, redirect to its detail page.
-          res.redirect(found_category.url);
-        } else {
-          //Update the record.
-          Category.findByIdAndUpdate(req.params.id, category, {}, function(
-            err,
-            thecategory
-          ) {
-            if (err) {
-              return next(err);
-            }
-            // Successful - redirect to cateogry detail page.
-            res.redirect(thecategory.url);
-          });
-        }
+        // Successful - redirect to cateogry detail page.
+        res.redirect(thecategory.url);
       });
     }
   }
