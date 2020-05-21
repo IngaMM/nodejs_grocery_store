@@ -1,4 +1,4 @@
-INVENTORY APPLICATION (GROCERY STORE)
+GROCERY STORE (Store Inventory)
 
 By I. Mahle
 
@@ -14,11 +14,11 @@ Instructions
 To populate the database: see instructions in populatedb.js
 
 Discussion
-I used the following technologies: HTML, CSS, Mongodb & Nodejs (Express).
+I used the following technologies: NodeJS, HTML and CSS.
 
-This inventory for a grocery store includes categories and items that are stored in a Mongodb-database. It is based on a REST-API implemented with express. When the user goes to the homepage he/she can choose a category to view, and then get a list of every item in that category. Items and categories have all CRUD-methods. Images can be uploaded for items. Destructive actions (like deleting and updating) require the user to enter a password (user: admin, password: foobar). For the views pug-templates with bootstrap and grids are used. The app is full responsive and can be viewed on screens of all sizes.
+This inventory for a store is implemented with NodeJS/Express. It includes categories and items that are stored in a MongoDB-database. When the user goes to the homepage he/she can choose a category to view, and then get a list of every item in that category. Items and categories have all CRUD-methods. Images can be uploaded for items. Destructive actions (like deleting and updating) require the user to enter a secret username and password (user: admin, password: foobar). For the views pug-templates with Bootstrap and grids are used. The app is fully responsive and can be viewed on screens of all sizes.
 
-A live version of this app can be found at https://damp-depths-26999.herokuapp.com
+A live version of this app can be found at https://store-inventory22.herokuapp.com
 
 Requirements
 npm
